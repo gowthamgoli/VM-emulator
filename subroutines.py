@@ -23,8 +23,44 @@ def call(arg0, arg1, mainMemory, pc):
 		mainMemory.stack.append((pc.curr_label, pc.inst_num))
 		pc.curr_label = arg0+':'
 		pc.inst_num = -1
-	#print pc.curr_label
-	#print pc.inst_num
 
 def ret(arg0, arg1, mainMemory, pc):
 	pc.curr_label, pc.inst_num = mainMemory.stack.pop()
+
+def inc(arg0, arg1, mainMemory, pc):
+	val_arg0 = get_value(arg0, mainMemory)
+	store_val(arg0, val_arg0+1, mainMemory)
+
+def dec(arg0, arg1, mainMemory, pc):
+	val_arg0 = get_value(arg0, mainMemory)
+	store_val(arg0, val_arg0-1, mainMemory)
+
+def add(arg0, arg1, mainMemory, pc):
+	val_arg0 = get_value(arg0, mainMemory)
+	val_arg1 = get_value(arg1, mainMemory)
+	store_val(arg0, val_arg0+val_arg1, mainMemory)
+
+def sub(arg0, arg1, mainMemory, pc):
+	val_arg0 = get_value(arg0, mainMemory)
+	val_arg1 = get_value(arg1, mainMemory)
+	store_val(arg0, val_arg0-val_arg1, mainMemory)
+
+def mul(arg0, arg1, mainMemory, pc):
+	val_arg0 = get_value(arg0, mainMemory)
+	val_arg1 = get_value(arg1, mainMemory)
+	store_val(arg0, val_arg0*val_arg1, mainMemory)
+
+def div(arg0, arg1, mainMemory, pc):
+	val_arg0 = get_value(arg0, mainMemory)
+	val_arg1 = get_value(arg1, mainMemory)
+	store_val(arg0, val_arg0/val_arg1, mainMemory)
+	mainMemory.registers['rem'] = val_arg0%val_arg1
+
+def mod(arg0, arg1, mainMemory, pc):
+	val_arg0 = get_value(arg0, mainMemory)
+	val_arg1 = get_value(arg1, mainMemory)
+	mainMemory.registers['rem'] = val_arg0%val_arg1
+
+def rem(arg0, arg1, mainMemory, pc):
+	store_val(arg0, mainMemory.registers['rem'], mainMemory)
+

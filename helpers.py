@@ -1,8 +1,11 @@
 def is_mem_address(x):
+	if len(x) <= 2:	return False
 	if x[0] == '[' and x[-1] == ']': return True
 
 def is_number(x):
-	if (x[0] == '0' and x[1] == 'x') or (x[-2] == '|' and x[-1] == 'h') or (x[-2] == '|' and x[-1] == 'b') or (x.isdigit()): return True
+	if x.isdigit():	return True
+	if len(x) >= 3:
+		if (x[0] == '0' and x[1] == 'x') or (x[-2] == '|' and x[-1] == 'h') or (x[-2] == '|' and x[-1] == 'b'): return True
 
 def is_register(x, registers):
 	if x in registers: return True
@@ -12,13 +15,10 @@ def get_value_mem(x, addresses):
 	return addresses[x]
 
 def get_value_num(x):
-	if (x[0] == '0' and x[1] == 'x'):
-		return int(x[2:], 16)
-	if (x[-2] == '|' and x[-1] == 'h'):
-		return int(x[:-2], 16)
-	if (x[-2] == '|' and x[-1] == 'b'):
-		return int(x[:-2], 2)
-	return int(x)
+	if x.isdigit():	return int(x)
+	if (x[0] == '0' and x[1] == 'x'):	return int(x[2:], 16)
+	if (x[-2] == '|' and x[-1] == 'h'):	return int(x[:-2], 16)
+	if (x[-2] == '|' and x[-1] == 'b'):	return int(x[:-2], 2)
 
 def get_value_reg(x, registers):
 	return registers[x] 

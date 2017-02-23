@@ -2,6 +2,9 @@ test:
 mov [001|h], 50
 push 25
 pop [010|h]
+dec [10]
+add [10], edx
+mul [100|b], 0x20
 ret
 
 start:
@@ -15,3 +18,15 @@ pushf
 push 42
 call test
 popf edx
+call divide
+call modulo
+rem ecx
+
+divide:
+div edx, 3
+ret
+
+modulo:
+mod edx, 10
+ret
+

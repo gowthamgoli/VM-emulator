@@ -1,11 +1,12 @@
 import sys
 from collections import OrderedDict
+from collections import defaultdict
 from pprint import pprint
 from subroutines import *
 
 class MainMemory():
-	registers = {'eax':0, 'ebx':0,'ecx':0, 'edx':0, 'esi':0, 'edi':0, 'esp':0, 'ebp':0, 'eip':0, 'r08':0, 'r09':0, 'r10':0, 'r11':0, 'r12':0, 'r13':0, 'r14':0, 'r15':0, 'flags':0}
-	addresses = {}
+	registers = {'eax':0, 'ebx':0,'ecx':0, 'edx':0, 'esi':0, 'edi':0, 'esp':0, 'ebp':0, 'eip':0, 'r08':0, 'r09':0, 'r10':0, 'r11':0, 'r12':0, 'r13':0, 'r14':0, 'r15':0, 'flags':0, 'rem':0}
+	addresses = defaultdict(int)
 	stack = []
 
 class ProgramCounter():
@@ -17,7 +18,8 @@ instructions = OrderedDict()
 instruction = {'op': None, 'arg0': None, 'arg1': None}
 
 
-call_subroutine = {'mov':mov, 'push':push, 'pop':pop, 'pushf':pushf, 'popf':popf, 'call':call, 'ret':ret}
+call_subroutine = {'mov':mov, 'push':push, 'pop':pop, 'pushf':pushf, 'popf':popf, 'call':call, 'ret':ret, 'inc':inc, 'dec':dec, 'add':add, 'sub':sub,\
+				   'mul':mul, 'div':div, 'mod':mod, 'rem':rem}
 
 
 def parseFile(filename, pc):
