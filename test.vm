@@ -7,6 +7,11 @@ add [10], edx
 mul [100|b], 0x20
 ret
 
+binary:
+xor [4], 100
+or edx, [4]
+ret
+
 start:
 mov [100|b], 50
 mov eax, [100|b]
@@ -21,6 +26,7 @@ popf edx
 call divide
 call modulo
 rem ecx
+call binary
 
 divide:
 div edx, 3

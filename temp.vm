@@ -1,0 +1,3 @@
+mov eax,100
+mov ecx, 200
+cmp eax, ecx

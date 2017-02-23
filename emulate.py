@@ -19,7 +19,7 @@ instruction = {'op': None, 'arg0': None, 'arg1': None}
 
 
 call_subroutine = {'mov':mov, 'push':push, 'pop':pop, 'pushf':pushf, 'popf':popf, 'call':call, 'ret':ret, 'inc':inc, 'dec':dec, 'add':add, 'sub':sub,\
-				   'mul':mul, 'div':div, 'mod':mod, 'rem':rem}
+				   'mul':mul, 'div':div, 'mod':mod, 'rem':rem, 'not':binnot, 'xor':binxor, 'or':binor, 'and':binand, 'shl':binshl, 'shr':binshr, 'cmp':cmpr}
 
 
 def parseFile(filename, pc):

@@ -64,3 +64,36 @@ def mod(arg0, arg1, mainMemory, pc):
 def rem(arg0, arg1, mainMemory, pc):
 	store_val(arg0, mainMemory.registers['rem'], mainMemory)
 
+def binnot(arg0, arg1, mainMemory, pc):
+	val_arg0 = get_value(arg0, mainMemory)
+	store_val(arg0, ~val_arg0, mainMemory)
+
+def binxor(arg0, arg1, mainMemory, pc):
+	val_arg0 = get_value(arg0, mainMemory)
+	val_arg1 = get_value(arg1, mainMemory)
+	store_val(arg0, val_arg0^val_arg1, mainMemory)
+
+def binor(arg0, arg1, mainMemory, pc):
+	val_arg0 = get_value(arg0, mainMemory)
+	val_arg1 = get_value(arg1, mainMemory)
+	store_val(arg0, val_arg0|val_arg1, mainMemory)
+
+def binand(arg0, arg1, mainMemory, pc):
+	val_arg0 = get_value(arg0, mainMemory)
+	val_arg1 = get_value(arg1, mainMemory)
+	store_val(arg0, val_arg0&val_arg1, mainMemory)
+
+def binshl(arg0, arg1, mainMemory, pc):
+	val_arg0 = get_value(arg0, mainMemory)
+	val_arg1 = get_value(arg1, mainMemory)
+	store_val(arg0, val_arg0<<val_arg1, mainMemory)
+
+def binshr(arg0, arg1, mainMemory, pc):
+	val_arg0 = get_value(arg0, mainMemory)
+	val_arg1 = get_value(arg1, mainMemory)
+	store_val(arg0, val_arg0>>val_arg1, mainMemory)
+
+def cmpr(arg0, arg1, mainMemory, pc):
+	val_arg0 = get_value(arg0, mainMemory)
+	val_arg1 = get_value(arg1, mainMemory)
+	mainMemory.registers['flags'] = val_arg0 - val_arg1
