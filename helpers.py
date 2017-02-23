@@ -23,16 +23,22 @@ def get_value_num(x):
 def get_value_reg(x, registers):
 	return registers[x] 
 
-def get_value(arg, registers, addresses):
+def store_val(x, val, mainMemory):
+	if is_mem_address(x):
+		mainMemory.addresses[get_value_num(x[1:-1])] = val
+	elif is_register(x, mainMemory.registers):
+		mainMemory.registers[x] = val
+
+def get_value(arg, mainMemory):
 	#print 'in get value'
 	if is_mem_address(arg):
-		print 'its a mem address'
-		return get_value_mem(arg, addresses)
+		#print 'its a mem address'
+		return get_value_mem(arg, mainMemory.addresses)
 	elif is_number(arg):
-		print 'its a number'
+		#print 'its a number'
 		return get_value_num(arg)
-	elif is_register(arg, registers):
-		print 'its a register'
-		return get_value_reg(arg, registers)
+	elif is_register(arg, mainMemory.registers):
+		#print 'its a register'
+		return get_value_reg(arg, mainMemory.registers)
 
 #is_mem_address('100|b')

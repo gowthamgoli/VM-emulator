@@ -1,2 +1,17 @@
+test:
+mov [001|h], 50
+push 25
+pop [010|h]
+ret
+
+start:
 mov [100|b], 50
 mov eax, [100|b]
+mov edx, 0x100
+push eax
+push edx
+pop [010|h]
+pushf
+push 42
+call test
+popf edx

@@ -1,16 +1,26 @@
 import sys
 from collections import OrderedDict
+from pprint import pprint
 from subroutines import *
+
+class MainMemory():
+	registers = {'eax':0, 'ebx':0,'ecx':0, 'edx':0, 'esi':0, 'edi':0, 'esp':0, 'ebp':0, 'eip':0, 'r08':0, 'r09':0, 'r10':0, 'r11':0, 'r12':0, 'r13':0, 'r14':0, 'r15':0, 'flags':0}
+	addresses = {}
+	stack = []
+
+class ProgramCounter():
+	inst_num = 0
+	curr_label = None
+	labels = []
 
 instructions = OrderedDict()
 instruction = {'op': None, 'arg0': None, 'arg1': None}
-labels = []
-registers = {'eax':0, 'ebx':0,'ecx':0, 'edx':0, 'esi':0, 'edi':0, 'esp':0, 'ebp':0, 'eip':0, 'R08':0, 'R09':0, 'R10':0, 'R11':0, 'R12':0, 'R13':0, 'R14':0, 'R15':0}
-addresses = {}
 
-call_subroutine = {'mov': mov}
 
-def parseFile(filename):
+call_subroutine = {'mov':mov, 'push':push, 'pop':pop, 'pushf':pushf, 'popf':popf, 'call':call, 'ret':ret}
+
+
+def parseFile(filename, pc):
 	lines = open(filename,'r').read().split('\n')
 	#print lines
 	currLabel = 'Null'
@@ -35,7 +45,7 @@ def parseFile(filename):
 
 
 	for label in instructions:
-		labels.append(label)
+		pc.labels.append(label)
 		'''print label
 		for inst in instructions[label]:
 			print inst'''
@@ -43,33 +53,47 @@ def parseFile(filename):
 def main():
 	filename = sys.argv[1]
 
+	mainMemory = MainMemory()
+	pc = ProgramCounter()
+
 	#parses file and adds insts to the dict 'instructions' to the form of {label:[inst]}
-	parseFile(filename)
+	parseFile(filename, pc)
 
+	
 	#represesnts the current instruction number within that label
-	inst_num = 0
+	pc.inst_num = 0
 	#represents the current label to be executed or in execution
-	curr_label = 'start:' if 'start:' in labels else labels[0]
+	pc.curr_label = 'start:' if 'start:' in pc.labels else labels[0]
 
-	while inst_num != len(instructions[curr_label]):
+	while pc.inst_num != len(instructions[pc.curr_label]):
 		#get current instructions
-		curr_inst = instructions[curr_label][inst_num]
+		curr_inst = instructions[pc.curr_label][pc.inst_num]
+		print curr_inst
+		print pc.curr_label, pc.inst_num
 		tokens = curr_inst.split(None, 1)
 
 		#get the op code
 		instruction['op'] = tokens[0]
 
 		#get the arguments
-		args = [item.strip() for item in tokens[1].split(',')]
-		instruction['arg0'] = args[0]
-		instruction['arg1'] = args[1] if len(args) == 2 else None
-		print args
+		if len(tokens) == 2:
+			args = [item.strip() for item in tokens[1].split(',')]
+			if args:
+				instruction['arg0'] = args[0]
+				instruction['arg1'] = args[1] if len(args) == 2 else None
+		else:
+			instruction['arg0'] = None
+			instruction['arg1'] = None
 
-		call_subroutine[instruction['op']](instruction['arg0'], instruction['arg1'], registers, addresses)
-		print registers
-		print addresses
+		#print args
 
-		inst_num += 1
+		call_subroutine[instruction['op']](instruction['arg0'], instruction['arg1'], mainMemory, pc)
+		pprint(mainMemory.registers)
+		pprint(mainMemory.addresses)
+		print MainMemory.stack
+		print ''
+
+		pc.inst_num += 1
 
 if __name__ == "__main__":
     main()
