@@ -13,13 +13,15 @@ class ProgramCounter():
 	inst_num = 0
 	curr_label = None
 	labels = []
+	label_index = 0
 
 instructions = OrderedDict()
 instruction = {'op': None, 'arg0': None, 'arg1': None}
 
 
 call_subroutine = {'mov':mov, 'push':push, 'pop':pop, 'pushf':pushf, 'popf':popf, 'call':call, 'ret':ret, 'inc':inc, 'dec':dec, 'add':add, 'sub':sub,\
-				   'mul':mul, 'div':div, 'mod':mod, 'rem':rem, 'not':binnot, 'xor':binxor, 'or':binor, 'and':binand, 'shl':binshl, 'shr':binshr, 'cmp':cmpr}
+				   'mul':mul, 'div':div, 'mod':mod, 'rem':rem, 'not':binnot, 'xor':binxor, 'or':binor, 'and':binand, 'shl':binshl, 'shr':binshr, 'cmp':cmpr,\
+				   'jmp':jmp, 'je':je, 'jne':jne, 'jg':jg, 'jge':jge, 'jl':jl, 'jle':jle, 'prn':prn}
 
 
 def parseFile(filename, pc):
@@ -61,17 +63,22 @@ def main():
 	#parses file and adds insts to the dict 'instructions' to the form of {label:[inst]}
 	parseFile(filename, pc)
 
-	
+	#print pc.labels
 	#represesnts the current instruction number within that label
 	pc.inst_num = 0
 	#represents the current label to be executed or in execution
-	pc.curr_label = 'start:' if 'start:' in pc.labels else labels[0]
+	#index = 0 
+	if 'start:' in pc.labels:
+		pc.curr_label = 'start:'
+		pc.label_index = pc.labels.index('start:')
+	else:
+		pc.curr_label = pc.labels[0]
 
 	while pc.inst_num != len(instructions[pc.curr_label]):
 		#get current instructions
 		curr_inst = instructions[pc.curr_label][pc.inst_num]
-		print curr_inst
-		print pc.curr_label, pc.inst_num
+		#print curr_inst
+		#print pc.curr_label, pc.inst_num
 		tokens = curr_inst.split(None, 1)
 
 		#get the op code
@@ -90,12 +97,19 @@ def main():
 		#print args
 
 		call_subroutine[instruction['op']](instruction['arg0'], instruction['arg1'], mainMemory, pc)
-		pprint(mainMemory.registers)
+		'''pprint(mainMemory.registers)
 		pprint(mainMemory.addresses)
 		print MainMemory.stack
-		print ''
+		print '''
 
 		pc.inst_num += 1
+		if pc.inst_num == len(instructions[pc.curr_label]):
+			#print 'last intruction in the label '+ pc.curr_label
+			#print 'label index: '+ str(pc.label_index)
+			pc.label_index += 1
+			if pc.label_index == len(pc.labels): break
+			pc.curr_label = pc.labels[pc.label_index]
+			pc.inst_num = 0
 
 if __name__ == "__main__":
     main()

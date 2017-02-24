@@ -40,5 +40,7 @@ def get_value(arg, mainMemory):
 	elif is_register(arg, mainMemory.registers):
 		#print 'its a register'
 		return get_value_reg(arg, mainMemory.registers)
+	else:
+		return 'x'
 
 #is_mem_address('100|b')

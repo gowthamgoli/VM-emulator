@@ -23,9 +23,11 @@ def call(arg0, arg1, mainMemory, pc):
 		mainMemory.stack.append((pc.curr_label, pc.inst_num))
 		pc.curr_label = arg0+':'
 		pc.inst_num = -1
+		pc.label_index = pc.labels.index(arg0+':')
 
 def ret(arg0, arg1, mainMemory, pc):
 	pc.curr_label, pc.inst_num = mainMemory.stack.pop()
+	pc.label_index = pc.labels.index(pc.curr_label)
 
 def inc(arg0, arg1, mainMemory, pc):
 	val_arg0 = get_value(arg0, mainMemory)
@@ -97,3 +99,63 @@ def cmpr(arg0, arg1, mainMemory, pc):
 	val_arg0 = get_value(arg0, mainMemory)
 	val_arg1 = get_value(arg1, mainMemory)
 	mainMemory.registers['flags'] = val_arg0 - val_arg1
+
+def jmp(arg0, arg1, mainMemory, pc):
+	val_arg0 = get_value(arg0, mainMemory)
+	if val_arg0 == 'x' and  arg0+':' in pc.labels:
+		#mainMemory.stack.append((pc.curr_label, pc.inst_num))
+		pc.curr_label = arg0+':'
+		pc.inst_num = -1
+		pc.label_index = pc.labels.index(arg0+':')
+
+def je(arg0, arg1, mainMemory, pc):
+	val_arg0 = get_value(arg0, mainMemory)
+	if val_arg0 == 'x' and  arg0+':' in pc.labels and mainMemory.registers['flags'] == 0:
+		#mainMemory.stack.append((pc.curr_label, pc.inst_num))
+		pc.curr_label = arg0+':'
+		pc.inst_num = -1
+		pc.label_index = pc.labels.index(arg0+':')
+
+def jne(arg0, arg1, mainMemory, pc):
+	val_arg0 = get_value(arg0)
+	if val_arg0 == 'x' and  arg0+':' in pc.labels and mainMemory.registers['flags'] != 0:
+		mainMemory.stack.append((pc.curr_label, pc.inst_num))
+		pc.curr_label = arg0+':'
+		pc.inst_num = -1
+		pc.label_index = pc.labels.index(arg0+':')
+
+def jg(arg0, arg1, mainMemory, pc):
+	val_arg0 = get_value(arg0, mainMemory)
+	if val_arg0 == 'x' and  arg0+':' in pc.labels and mainMemory.registers['flags'] > 0:
+		#mainMemory.stack.append((pc.curr_label, pc.inst_num))
+		pc.curr_label = arg0+':'
+		pc.inst_num = -1
+		pc.label_index = pc.labels.index(arg0+':')
+
+def jge(arg0, arg1, mainMemory, pc):
+	val_arg0 = get_value(arg0, mainMemory)
+	if val_arg0 == 'x' and  arg0+':' in pc.labels and mainMemory.registers['flags'] >= 0:
+		#mainMemory.stack.append((pc.curr_label, pc.inst_num))
+		pc.curr_label = arg0+':'
+		pc.inst_num = -1
+		pc.label_index = pc.labels.index(arg0+':')
+
+def jl(arg0, arg1, mainMemory, pc):
+	val_arg0 = get_value(arg0, mainMemory)
+	if val_arg0 == 'x' and  arg0+':' in pc.labels and mainMemory.registers['flags'] < 0:
+		#mainMemory.stack.append((pc.curr_label, pc.inst_num))
+		pc.curr_label = arg0+':'
+		pc.inst_num = -1
+		pc.label_index = pc.labels.index(arg0+':')	
+
+def jle(arg0, arg1, mainMemory, pc):
+	val_arg0 = get_value(arg0, mainMemory)
+	if val_arg0 == 'x' and  arg0+':' in pc.labels and mainMemory.registers['flags'] <= 0:
+		#mainMemory.stack.append((pc.curr_label, pc.inst_num))
+		pc.curr_label = arg0+':'
+		pc.inst_num = -1
+		pc.label_index = pc.labels.index(arg0+':')
+
+def prn(arg0, argq, mainMemory, pc):
+	val_arg0 = get_value(arg0, mainMemory)
+	print val_arg0
