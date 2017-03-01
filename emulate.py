@@ -10,12 +10,13 @@ class MainMemory():
 	stack = []
 
 class ProgramCounter():
-	inst_num = 0
-	curr_label = None
-	labels = []
-	label_index = 0
+	inst_num = 0		#inst num within the label
+	curr_label = None	#current label being executed
+	labels = []			#list of labels acc. to the order in which they appear in the code
+	label_index = 0		#index of the current label being executed
+	instructions = OrderedDict()
 
-instructions = OrderedDict()
+
 instruction = {'op': None, 'arg0': None, 'arg1': None}
 
 
@@ -28,14 +29,14 @@ def parseFile(filename, pc):
 	lines = open(filename,'r').read().split('\n')
 	#print lines
 	currLabel = 'Null'
-	instructions[currLabel] = []
+	pc.instructions[currLabel] = []
 	for line in lines:
-		if line.startswith('#') or not line or line.isspace():
+		if line.strip().startswith('#') or not line or line.isspace():
 			continue
 		if ':' in line:
 			tokens = line.split(':')
 			currLabel = tokens[0]+':'
-			instructions[currLabel] = []
+			pc.instructions[currLabel] = []
 			if len(tokens) == 2:
 				line = tokens[1]
 		if not ':' in line:
@@ -43,15 +44,15 @@ def parseFile(filename, pc):
 			#print line
 			if line:
 				line = line.split('#')[0].strip()
-				instructions[currLabel].append(line)
+				pc.instructions[currLabel].append(line)
 
-	if not instructions['Null']: del instructions['Null']
+	if not pc.instructions['Null']: del pc.instructions['Null']
 
 
-	for label in instructions:
+	for label in pc.instructions:
 		pc.labels.append(label)
 		'''print label
-		for inst in instructions[label]:
+		for inst in pc.instructions[label]:
 			print inst'''
 
 def main():
@@ -66,17 +67,17 @@ def main():
 	#print pc.labels
 	#represesnts the current instruction number within that label
 	pc.inst_num = 0
-	#represents the current label to be executed or in execution
-	#index = 0 
+
 	if 'start:' in pc.labels:
 		pc.curr_label = 'start:'
 		pc.label_index = pc.labels.index('start:')
 	else:
 		pc.curr_label = pc.labels[0]
 
-	while pc.inst_num != len(instructions[pc.curr_label]):
+	#Keep executing until we reach the last instrunction of the current label
+	while pc.inst_num != len(pc.instructions[pc.curr_label]):
 		#get current instructions
-		curr_inst = instructions[pc.curr_label][pc.inst_num]
+		curr_inst = pc.instructions[pc.curr_label][pc.inst_num]
 		#print curr_inst
 		#print pc.curr_label, pc.inst_num
 		tokens = curr_inst.split(None, 1)
@@ -97,16 +98,18 @@ def main():
 		#print args
 
 		call_subroutine[instruction['op']](instruction['arg0'], instruction['arg1'], mainMemory, pc)
-		'''pprint(mainMemory.registers)
-		pprint(mainMemory.addresses)
-		print MainMemory.stack
-		print '''
+		#pprint(mainMemory.registers)
+		#pprint(mainMemory.addresses)
+		#print MainMemory.stack
+		#print ''
 
 		pc.inst_num += 1
-		if pc.inst_num == len(instructions[pc.curr_label]):
-			#print 'last intruction in the label '+ pc.curr_label
-			#print 'label index: '+ str(pc.label_index)
+		#check if we reached the last intruction of the current label
+		if pc.inst_num == len(pc.instructions[pc.curr_label]):
+
+			#go to next label
 			pc.label_index += 1
+			#if the current label is the last label in the sequence of the labels in the code then break out of loop
 			if pc.label_index == len(pc.labels): break
 			pc.curr_label = pc.labels[pc.label_index]
 			pc.inst_num = 0

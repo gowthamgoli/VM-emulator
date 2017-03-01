@@ -1,0 +1,25 @@
+inc eax
+prn 10
+mov ebx, 5
+jmp 13
+inc eax
+
+test:
+mov eax, 1
+inc eax
+inc ebx
+jmp 7
+prn 1
+prn 2
+prn 3
+prn 4
+prn 5
+prn 6
+prn 7
+prn 8
+prn 9
+prn 10
+
+prn eax
+inc eax
+prn eax

@@ -1,38 +1,18 @@
 test:
-mov [001|h], 50
-push 25
-pop [010|h]
-dec [10]
-add [10], edx
-mul [100|b], 0x20
-ret
-
-binary:
-xor [4], 100
-or edx, [4]
-ret
+	push 10
+	push ebp
+	mov ebp, esp
+	prn esp
+	pop ebp
+	prn ebp
+	pop eax
+	ret
 
 start:
-mov [100|b], 50
-mov eax, [100|b]
-mov edx, 0x100
-push eax
-push edx
-pop [010|h]
-pushf
-push 42
-call test
-popf edx
-call divide
-call modulo
-rem ecx
-call binary
-
-divide:
-div edx, 3
-ret
-
-modulo:
-mod edx, 10
-ret
-
+	prn esp
+	prn ebp
+	mov eax, 1
+	push 10
+	prn esp
+	call test
+	prn esp
